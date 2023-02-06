@@ -1,6 +1,9 @@
 # lab3_restaurant_database
 
-## Data Seeding
+### Data Seeding
+![image](https://user-images.githubusercontent.com/89030742/216880049-52f51bb4-dbd2-4c4b-a0a0-3561de93ebf6.png)
+
+
 ### Get Restaurants
 
 ![image](https://user-images.githubusercontent.com/89030742/216879009-9b8df5ac-5ba0-491b-b617-686f12a6a365.png)
