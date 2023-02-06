@@ -2,18 +2,21 @@
 
 ## Data Seeding
 ### Get Restaurants
+
 ![image](https://user-images.githubusercontent.com/89030742/216879009-9b8df5ac-5ba0-491b-b617-686f12a6a365.png)
 
 
 ### Restaurants by Cuisine
 To get all restaurants by cuisine, use the following endpoint:
 `GET /restaurants/cuisine/:cuisine`
+
 ![image](https://user-images.githubusercontent.com/89030742/216878992-27903457-d2c8-4f22-8b34-4eb028767cad.png)
 
 Replace :cuisine with the desired cuisine type.
 ### Sort Ascending
 To sort the restaurant data in ascending order by restaurant_id, use the following endpoint:
 `GET /restaurants?sortBy=ASC`
+
 ![image](https://user-images.githubusercontent.com/89030742/216878959-5ee6c428-1b0d-467a-a6ad-497c5e53b5da.png)
 
 ### Where all cuisines are equal to Delicatessen and the city is not equal to Brooklyn
