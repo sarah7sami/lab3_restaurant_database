@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const { typeDefs } = require('../schema');
-
 const restaurantSchema = new mongoose.Schema({
   restaurant_id: { type: String, required: true },
   name: { type: String, required: true },
