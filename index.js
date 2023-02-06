@@ -1,29 +1,94 @@
-const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-const typeDefs = require('./schema');
-const resolvers = require('./resolvers');
-
+const dotenv = require("dotenv");
 dotenv.config();
+const express = require("express");
+const mongoose = require("mongoose");
+const Restaurant = require("./models/Restaurant");
 
 const app = express();
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+mongoose
+.connect(process.env.MONGODB_URI, {
+useNewUrlParser: true,
+useUnifiedTopology: true
+})
+.then(() => {
+console.log("MongoDB Connected");
+})
+.catch(err => console.log(err));
+
+// return all restaurants
+app.get("/restaurants", (req, res) => {
+Restaurant.find({})
+.then(restaurants => {
+res.send(restaurants);
+})
+.catch(err => {
+res.status(500).send(err);
+});
 });
 
-server.applyMiddleware({ app });
+// to test: http://localhost:3000/restaurants
 
-const port = process.env.PORT || 3000;
+// return restaurants by cuisine
+app.get("/restaurants/cuisine/:cuisine", (req, res) => {
+Restaurant.find({ cuisine: req.params.cuisine })
+.then(restaurants => {
+res.send(restaurants);
 
-app.listen({ port }, () => {
-  console.log(`Server running at http://localhost:${port}${server.graphqlPath}`);
+})
+.catch(err => {
+res.status(500).send(err);
+});
 });
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+// to test: http://localhost:3000/restaurants/cuisine/Italian
 
+// return the selected columns and sort by restaurant_id
+app.get("/restaurants", (req, res) => {
+let sortOrder = req.query.sortBy;
+
+if (sortOrder === "ASC") {
+Restaurant.find({}, "id cuisines name city restaurant_id")
+.sort({ restaurant_id: 1 })
+.then(restaurants => {
+res.send(restaurants);
+})
+.catch(err => {
+res.status(500).send(err);
+});
+} else if (sortOrder === "DESC") {
+Restaurant.find({}, "id cuisines name city restaurant_id")
+.sort({ restaurant_id: -1 })
+.then(restaurants => {
+res.send(restaurants);
+})
+.catch(err => {
+res.status(500).send(err);
+});
+} else {
+res.send("Invalid sort order. Please specify either ASC or DESC.");
+}
+});
+
+// to test: http://localhost:3000/restaurants?sortBy=ASC
+
+// return restaurants by cuisine and city
+app.get("/restaurants/Delicatessen", (req, res) => {
+Restaurant.find(
+{ cuisines: "Delicatessen", city: { $ne: "Brooklyn" } },
+"cuisines name city -_id"
+)
+.sort({ name: 1 })
+.then(restaurants => {
+res.send(restaurants);
+})
+.catch(err => {
+res.status(500).send(err);
+});
+});
+
+// to test: http://localhost:3000/restaurants/Delicatessen
+
+app.listen(3000, () => {
+console.log("Server running on port 3000");
+});
